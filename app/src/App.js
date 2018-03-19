@@ -5,6 +5,8 @@ import './App.css';
 
 import SearchBar from './containers/search_bar';
 
+const GIPHY_API_KEY = 'eIRj58ROhk5HPIC7FqKTJDDH4bcGYc7W';
+
 // Use Title and Wrapper like any other React component – except they're styled!
 class App extends Component {
   render() {

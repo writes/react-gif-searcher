@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
-
+import SearchBar from './containers/search_bar';
 import './App.css';
 
 const GIPHY_API_KEY = 'eIRj58ROhk5HPIC7FqKTJDDH4bcGYc7W';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       gifs: []
     };
+    this.giphySearch('WeWork');
   }
 
-  componentDidMount() {
-    this.giphySearch('spurs');
+  debounce(func, wait = 300) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(this, args);
+      }, wait);
+    };
   }
 
   giphyFetch(url) {
@@ -35,8 +42,8 @@ class App extends Component {
       });
   }
 
-  giphySearch(search) {
-    const url = `/v1/gifs/search?q=${search}`;
+  giphySearch(term) {
+    const url = `/v1/gifs/search?q=${term}`;
     this.giphyFetch(url);
   }
 
@@ -45,20 +52,15 @@ class App extends Component {
     this.giphyFetch(url);
   }
 
-  search() {
-    console.log(this);
-
-    const query = document.getElementById('search') || {};
-    this.giphySearch(query.value);
-  }
-
   render() {
+    const giphySearch = this.debounce(term => {
+      this.giphySearch(term);
+    });
+
     return (
       <div className="App">
-        <input id="search" type="text" />
-        <button id="searchSubmit" onClick={() => this.search()}>
-          Go
-        </button>
+        <SearchBar onSearchTermChange={giphySearch} />
+
         {this.state.gifs.map(gif => {
           return (
             <a href={gif.href} target="_blank">

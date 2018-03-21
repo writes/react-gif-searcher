@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import SearchBar from './containers/search_bar';
+import GifList from './containers/gif_list';
 import './App.css';
 
 const GIPHY_API_KEY = 'eIRj58ROhk5HPIC7FqKTJDDH4bcGYc7W';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +16,7 @@ class App extends Component {
 
   debounce(func, wait = 300) {
     let timeout;
-    return function(...args) {
+    return function (...args) {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         func.apply(this, args);
@@ -38,6 +39,7 @@ class App extends Component {
             href: gif.bitly_url
           };
         });
+        console.log(gifs);
         this.setState({ gifs: gifs });
       });
   }
@@ -60,19 +62,8 @@ class App extends Component {
     return (
       <div className="App">
         <SearchBar onSearchTermChange={giphySearch} />
-
-        {this.state.gifs.map(gif => {
-          return (
-            <a href={gif.href} target="_blank">
-              <div key={gif.id}>
-                <img src={gif.url} alt="something" />
-              </div>
-            </a>
-          );
-        })}
+        <GifList />
       </div>
     );
   }
 }
-
-export default App;

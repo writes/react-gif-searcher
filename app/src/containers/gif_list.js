@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { selectGif } from '../actions/index';
+import { bindActionCreators } from 'redux';
 
-export class GifList extends Component {
+class GifList extends Component {
   renderList() {
-    return this.props.gifs.map(gifs => {
-      <li>
-        <a href={gif.id} target="_blank">
-          <div key={gif.id}>
-            <img src={gif.id} alt="testing this guy on all of them" />
-          </div>
-        </a>
-      </li>;
+    return this.props.gifs.map(gif => {
+      return (
+        <li>
+          <a href={gif.href} target="_blank">
+            <div key={gif.id}>
+              <img src={gif.url} alt="testing" />
+            </div>
+          </a>
+        </li>
+      );
     });
   }
 
@@ -20,9 +24,15 @@ export class GifList extends Component {
 }
 
 function mapStateToProps(state) {
-  return {
-    gifs: state.gifs
-  };
+  return { gifs: state.gifs };
 }
 
-export default connect(mapStateToProps)(GifList);
+// returned is props on GifList
+function mapDispatchToProps(dispatch) {
+  // selectGif result passed to all reducers
+  return bindActionCreators({ selectGif: selectGif }, dispatch);
+}
+
+// promote GifList from a component to a container
+// Make selectGif available as a prop
+export default connect(mapStateToProps, mapDispatchToProps)(GifList);

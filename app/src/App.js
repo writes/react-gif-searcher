@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import SearchBar from './containers/search_bar';
 import GifList from './containers/gif_list';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducers from './reducers';
 import './App.css';
 
 const GIPHY_API_KEY = 'eIRj58ROhk5HPIC7FqKTJDDH4bcGYc7W';
+
+let store = createStore(reducers);
 
 export default class App extends Component {
   constructor(props) {
@@ -58,11 +63,13 @@ export default class App extends Component {
     const giphySearch = this.debounce(term => {
       this.giphySearch(term);
     });
-
     return (
       <div className="App">
         <SearchBar onSearchTermChange={giphySearch} />
-        <GifList />
+
+        <Provider store={store}>
+          <GifList />
+        </Provider>
       </div>
     );
   }

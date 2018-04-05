@@ -1,38 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { selectGif } from '../actions/index';
-import { bindActionCreators } from 'redux';
 
 class GifList extends Component {
-  renderList() {
-    return this.props.gifs.map(gif => {
-      return (
-        <li>
-          <a href={gif.href} target="_blank">
-            <div key={gif.id}>
-              <img src={gif.url} alt="testing" />
-            </div>
-          </a>
-        </li>
-      );
-    });
-  }
-
   render() {
-    return <ul>{this.renderList()}</ul>;
+    const gifs = this.props.gifs || [];
+    return (
+      <div className="gif-list-wrapper">
+        <ul className="gif-list">
+          {gifs.map(gif => {
+            return (
+              <li className="gif-list-item" key={gif.id}>
+                <a className="gif-list-link" href={gif.url}>
+                  <img
+                    className="gif-list-img"
+                    src={gif.images.original.url}
+                    alt={gif.id}
+                  />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
   }
 }
 
-function mapStateToProps(state) {
-  return { gifs: state.gifs };
+function mapStateToProps({ gifs }) {
+  return { gifs };
 }
 
-// returned is props on GifList
-function mapDispatchToProps(dispatch) {
-  // selectGif result passed to all reducers
-  return bindActionCreators({ selectGif: selectGif }, dispatch);
-}
-
-// promote GifList from a component to a container
-// Make selectGif available as a prop
-export default connect(mapStateToProps, mapDispatchToProps)(GifList);
+export default connect(mapStateToProps)(GifList);
